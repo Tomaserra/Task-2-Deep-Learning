@@ -1,0 +1,12 @@
+Comparison: normalized vs not_normalized
+
+Normalized results:
+  Train acc: 0.7587
+  Test  acc: 0.6772
+  Total training time: 485.68s
+
+Not-normalized results:
+  Train acc: 0.6650
+  Test  acc: 0.6105
+  Total training time: 389.12s
+
