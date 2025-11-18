@@ -1,12 +1,7 @@
 Comparison of experiments
 
-max_pool results:
-  Train acc: 0.6549
-  Test  acc: 0.6583
-  Total training time: 498.40s
-
-avg_pool results:
-  Train acc: 0.5666
-  Test  acc: 0.5723
-  Total training time: 421.30s
+final_model results:
+  Train acc: 0.6477
+  Test  acc: 0.6491
+  Total training time: 383.86s
 
