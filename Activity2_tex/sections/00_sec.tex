@@ -1,0 +1,38 @@
+
+\section{Exercise 0 - Download and Loading of the Dataset}
+\lhead{Exercise 0 - Download and Loading of the Dataset}
+
+\vspace{-10pt}
+\begin{questionbox}
+Download and extract the Python version of the dataset from the CIFAR website. Take a moment to examine the description of the data within the extracted folder.
+\end{questionbox}
+
+The \textit{CIFAR-10} dataset was downloaded following the instructions provided by Krizhevsky~\cite{krizhevsky2009learning}, and its structure was subsequently analyzed. The dataset consists of RGB images of size $32 \times 32$ pixels, organized as follows:
+\begin{itemize}
+    \item \textbf{5 training batches}, each containing 10,000 images (for a total of 50,000 images);
+    \item \textbf{1 test batch} containing 10,000 images.
+\end{itemize}
+Each batch file contains a Python \texttt{dictionary} with the following components:
+\begin{description}
+    \item[\texttt{data}] A NumPy array of shape $(10000, 3072)$ and type \texttt{uint8}. Each row corresponds to a single $32 \times 32$ color image, flattened into a one-dimensional vector. The first 1,024 entries represent the red channel, the next 1,024 the green channel, and the final 1,024 the blue channel. Images are stored in \textbf{row-major order}, meaning that the first 32 entries correspond to the red values of the first row of the image.
+
+    \item[\texttt{labels}] A list of 10,000 integers in the range [0–9]. The integer at index \texttt{i} specifies the class label of the \texttt{i}-th image in the \texttt{data} array.
+\end{description}
+Additionally, the dataset includes a metadata file named \texttt{batches.meta}, which is also a Python \texttt{dictionary}. It contains the following entry:
+\begin{description}
+    \item[\texttt{label\_names}] A list of 10 class names corresponding to the numeric labels defined above. 
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

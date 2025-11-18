@@ -1,0 +1,69 @@
+
+\section{Exercise 1 - Design and implementation of Dataset class}
+\lhead{Exercise 1 - Design and implementation of Dataset class}
+
+\vspace{-10pt}
+\begin{questionbox} 
+Create a Dataset class to read the data. When initialized, this class should
+take as arguments the path to the data, the transformation to be applied to each
+image (see TIP2) and if the dataset is train or test. If train you should load all
+the 5 batches that composed the whole CIFAR training set. [2.0 pts]
+\end{questionbox} 
+
+
+
+
+
+The class \texttt{CIFAR10Dataset} was designed with the following considerations:
+
+\begin{itemize}
+    \item \textbf{Integration}: To read the data efficiently, the class was integrated within the PyTorch framework. The \textbf{map-style \texttt{Dataset} class} was used as an \textbf{abstract base class}, allowing \texttt{CIFAR10Dataset} to provide standardized methods for data loading, access, and optional transformations.
+    \item \textbf{Data reading}: The class is responsible for reading the binary dataset files, loading all five training batches for the training set or the single batch for the test set, and converting the raw data into a structured format suitable for further processing.
+    \item \textbf{Transformations}: Optional transformations are applied to each image, such as conversion to tensors and normalization, to prepare the data for use in model training or evaluation.
+    \item \textbf{Visualization}: A method is provided to inspect individual images, facilitating verification of data loading and preprocessing steps.
+\end{itemize}
+
+
+To design and organize these operations, a UML class diagram was created using Lucidchart~\cite{lucidchart}, providing a high-level abstraction prior to implementation (Figure~\ref{fig:uml_cifar10dataset}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{images/UML class.pdf}
+    \caption{Class diagram generated with Lucidchart. Attributes are highlighted in \textcolor[HTML]{1071e5}{blue} and methods in \textcolor[HTML]{008573}{green}. Relationships to other classes inherited from \texttt{Dataset} are omitted for clarity, as they are not essential.}
+    \label{fig:uml_cifar10dataset}
+\end{figure}
+\vspace{-20pt}
+The attributes and methods of the class are summarized below:
+\vspace{-10pt}
+
+\begin{description}
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{path}}}] Filesystem path to the dataset files.
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{data\_type}}}] Specifies whether the dataset is for training or testing ('train' or 'test'; default: 'train').
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{transform}}}] Optional transformation applied to each sample, such as normalization or conversion to tensors (default: None).
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{data}}}] Stores the image data as a NumPy array. 
+    If \texttt{data\_type} is \texttt{'train'}, it contains all 5 training batches stacked into a single array of shape \((50000, 3, 32, 32)\).\footnote{Each of the 50000 images is represented in CHW (Channel, Height, Width) format: 3 color channels (RGB) of 32×32 pixels.} 
+    If \texttt{data\_type} is \texttt{'test'}, it contains the single test batch of shape \((10000, 3, 32, 32)\).\footnote{Images are also stored in CHW format.}
+
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{labels}}}] Stores the corresponding labels for each image. For training, it contains labels from all 5 batches; for testing, it contains labels from the test batch.
+\end{description}
+
+
+\begin{description}
+    \item[\mbox{\textcolor[HTML]{008573}{\texttt{\_\_getitem\_\_}}}] Retrieves a single image by index, enabling Python-style indexing (e.g., \texttt{dataset[0]}). If a transformation is defined, it is applied to the image at each access.
+    \item[\mbox{\textcolor[HTML]{008573}{\texttt{\_\_len\_\_}}}] Returns the total number of images in the dataset.
+    \item[\mbox{\textcolor[HTML]{008573}{\texttt{visualize}}}] Optional method to display individual samples, typically using \texttt{matplotlib}.
+\end{description}
+
+
+
+Specifically, to load the data, an instance of \texttt{CIFAR10Dataset} was created. A composite transformation was defined and passed to the dataset upon instantiation. Two example transformations are applied: a conversion to tensor using \texttt{transforms.ToTensor()}, and a normalization using \texttt{transforms.Normalize()} to scale the pixel values. 
+
+Moreover, a single image from the dataset is visualized in Figure~\ref{fig:example_image}. It is important to note that the resolution is limited, as the CIFAR-10 images are only 32×32 pixels.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/frog.png}
+    \caption{Example image from the CIFAR-10 dataset.}
+    \label{fig:example_image}
+\end{figure}

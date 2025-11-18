@@ -1,0 +1,106 @@
+\section{Exercise 2 - Design and Implementation of a Convolutional Neural Network}
+\lhead{Exercise 2 - Design and Implementation of a Convolutional Neural Network}
+
+\vspace{-10pt}
+\begin{questionbox}
+Build a CNN model to predict a class from the input image (you can use
+the \texttt{Conv2D} module and one of the many pooling layers already implemented).
+Which are the main hyperparameters you should set to build the main model?
+Good practice is to build the model class as general as possible and specify the
+hyperparameters when the class is called. [2.0 pts]
+\end{questionbox}
+
+Models (inserisci link) in PyTorch are the fundamental building blocks of neural networks.
+A convolutional neural netowrk is simply a specific type of neural netrowrk. 
+To completely build a convolutional neural network it is necessary to build around it a model to completely integrate in pytroch environment. 
+The model allows us to which enables automatic parameter management, supports custom forward passes, 
+allows gradient computation via autograd, and ensures  compatibility with optimizers and model saving/loading and other things to perform image classification. 
+
+The implemented model, \texttt{GeneralCNN}, is a flexible and extensible convolutional neural network 
+designed to perform image classification on the \textit{CIFAR-10} dataset. It follows the general CNN 
+architecture principles discussed in class~\cite{fonollosa2023cnn} and discussed by the pyroch doc: 
+convolutional and pooling layers for spatial feature extraction and fully connected layers for final classification.
+
+
+
+Convolutional Neural Networks (CNNs) are feed-forward neural networks optimized for spatially structured data such as images. 
+They exploit three main principles: \textbf{local connectivity}, \textbf{weight sharing}, and \textbf{spatial hierarchies of features}~\cite{fonollosa2023cnn}. 
+The \texttt{GeneralCNN} class was designed to reflect these principles while allowing flexibility through parameterization of key hyperparameters. 
+Its architecture is organized as follows:
+
+\begin{itemize}
+    \item \textbf{Convolutional layers:} Each layer applies a set of learnable filters (\texttt{conv\_layers}) to extract spatial features such as edges or textures. Local connectivity ensures that neurons only process small receptive fields of the input image, reducing the number of parameters compared to a fully connected network.
+    \item \textbf{Activation functions:} Non-linear activation functions (\texttt{ReLU}, \texttt{LeakyReLU}, or \texttt{ELU}) are applied after each convolution to introduce non-linearity and prevent saturation effects.
+    \item \textbf{Pooling layers:} Between convolutions, a pooling operation (\texttt{MaxPool2D} or \texttt{AvgPool2D}) reduces spatial resolution while maintaining the most salient information. Pooling contributes to translational invariance and controls overfitting by reducing the feature map size.
+    \item \textbf{Flattening and fully connected layers:} The resulting feature maps are flattened and passed through a sequence of fully connected (\texttt{Linear}) layers, culminating in an output layer of dimension equal to the number of classes (\(10\) for CIFAR-10). This stage performs the actual classification.
+\end{itemize}
+
+To organize the model architecture, a UML class diagram was created using Lucidchart~\cite{lucidchart}, 
+providing a concise overview of the implemented \texttt{GeneralCNN} class (Figure~\ref{fig:uml_cnn}). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/UML class_ex2.pdf}
+    \caption{UML diagram generated with Lucidchart for the \texttt{GeneralCNN} class. Attributes are shown in \textcolor[HTML]{1071e5}{blue}, while methods are highlighted in \textcolor[HTML]{008573}{green}. The class inherits from PyTorch’s \texttt{nn.Module} (relationship omitted for clarity) and encapsulates the sequential components of a CNN - convolutional, pooling, activation, and fully connected layers - defined through parameterized hyperparameters.}
+    \label{fig:uml_cnn}
+\end{figure}
+
+The diagram emphasizes that \texttt{GeneralCNN} inherits from \texttt{nn.Module} for pytorch integration and performs to main operations: 
+the initialization of the network layers (i.e. conv layer, pooling, actfun and fully conne) and structure in the initializer of the class depending on the related inputs;
+a forward pass that provides performs the feed forward operation through the network
+
+
+\begin{description}
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{in\_channels}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{num\_classes}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{conv\_layers}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{pool\_type}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{pool\_kernel}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{pool\_stride}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{fc\_layers}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{activation}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{layers}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{pools}}}] Describe this
+    \item[\mbox{\textcolor[HTML]{1071e5}{\texttt{fc\_layers}}}] Describe this
+
+\end{description}
+
+\begin{description}
+    \item[\mbox{\textcolor[HTML]{008573}{\texttt{\_\_init\_\_}}}] Initializes convolutional and pooling layers according to user-defined hyperparameters, and sets the activation function.
+    \item[\mbox{\textcolor[HTML]{008573}{\texttt{forward}}}] Defines the forward propagation, sequentially applying convolutions, activations, pooling, flattening, and dense layers to produce the class logits.
+\end{description}
+
+Trough the models the hyperparameters of the nwtwork can be controlled when the object is instanciated
+As known each of these hyperparameters directly affects the \textbf{model’s complexity, representational power, and training time}. 
+For example, increasing the number of convolutional filters allows the model to capture more complex features, 
+while deeper fully connected layers enhance nonlinear decision boundaries. 
+However, this comes at the cost of higher computational requirements and risk of overfitting.
+
+
+
+A typical configuration for CIFAR-10, inspired by the LeNet architecture, was used:
+\[
+\texttt{GeneralCNN(in\_channels=3, num\_classes=10, conv\_layers=[(6,5),(16,5)], fc\_layers=[120,84])}
+\]
+
+
+The forward method is where the structure of the class is implemented and the feed forward performed.
+To perform classification the following neural network strucutre (see figure) was used with the following hyperparameters (see table ...).
+
+
+
+
+Moreover to assess the netowrk performance by manually tuning the parameters in a more efficient way, it was desided to 
+implement and Experiment class that would provide a general model for an experiment allowing not only the training of the network,
+but also it's evaluation on the training data and test data. Specifically the Experiment class was designed to perform the following operations:
+
+\begin{itemize}
+    \item \textbf{Data loading:} the data should be loaded and divided into thr training and test trough specified batch sizes
+    \item  
+\end{itemize}
+
+
+it's associated with the \texttt{CIFAR10Dataset}
+class and the related dataloader to perform data division in trainging and test and it's associated with  
+
+
