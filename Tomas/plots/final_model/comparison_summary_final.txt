@@ -1,0 +1,7 @@
+Comparison of experiments
+
+final_model results:
+  Train acc: 0.8278
+  Test  acc: 0.6686
+  Total training time: 842.11s
+
